@@ -82,5 +82,12 @@ jobs:
   information:
     runs-on: ubuntu-latest
     steps:
+      - name: Get code
+        uses: actions/checkout@v3
       - name: Run custom action
+        # IMPORTANTE: Esto NO funciona si es un action local almacenado en este repositorio porque
+        #  falta obtener el código (checkout) que incluye la definición del custom action.
+        # Si fuera un custom action almacenado en otro repositorio podríamos usarlo sin hacer el checkout
+        # del código.
+        # Por eso arriba añadimos el step Get code
         uses: ./.github/actions/deploy-s3-javascript
