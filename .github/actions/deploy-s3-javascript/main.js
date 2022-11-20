@@ -4,6 +4,9 @@
 // npm install @actions/core @actions/github @actions/exec
 // https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action
 // https://github.com/actions/toolkit
+//
+// IMPORTANTE: NO se puede añadir a .gitignore el node_modules generado aquí. Es requerido por GitHub Actions
+// para ejecutar la acción con éxito.
 const core = require('@actions/core');
 const github = require('@actions/github');
 const exec = require('@actions/exec');
