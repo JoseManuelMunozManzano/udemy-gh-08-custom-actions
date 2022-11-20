@@ -17,7 +17,7 @@ jobs:
         # Para un action almacenado localmente en este proyecto, se pasa el path a la carpeta del action, relativo
         # al root del proyecto. GitHub Actions busca automáticamente el fichero action.yml, por lo que no hay que
         # indicarlo.
-        uses: ./github/actions/cached-deps
+        uses: ./.github/actions/cached-deps
       - name: Lint code
         run: npm run lint
   test:
