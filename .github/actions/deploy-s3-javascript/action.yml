@@ -1,0 +1,16 @@
+# Este action cogerá el código built website y lo subirá a Amazon S3, que es un servicio ofrecido por AWS que
+# puede usarse para alojar websites estáticos.
+# Para un custom JavaScript action, en runs hay que indicar que se usa node y la versión, ejemplo node16.
+# En la web se indica que versiones de Node soporta.
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#runs-for-javascript-actions
+name: 'Deploy to AWS S3'
+description: 'Deploy a static website via AWS S3'
+runs:
+  using: 'node16'
+  # Se indica el nombre del fichero que se ejecutará para este custom action. El fichero está en el mismo directorio
+  # que action.yml, pero si no lo estuviera habría que indicar el path.
+  # Hay otras keys, pre y post donde se indican que ficheros JS se ejecutarán antes y después de la key main.
+  # Se suelen usar para configuraciones y para limpieza, pero no los usaremos en este ejemplo.
+  # pre:
+  main: 'main.js'
+  # post:
