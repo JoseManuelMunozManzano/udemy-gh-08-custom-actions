@@ -44,7 +44,7 @@ runs:
       # En este ejemplo se está devolviendo el valor que se pasó como entrada. Es solo un ejemplo.
       run: |
         npm ci
-        echo "cache='%{{ inputs.caching }}'" >> $GITHUB_OUTPUT
+        echo "cache='${{ inputs.caching }}'" >> $GITHUB_OUTPUT
       # Una key especial que debe añadirse si estamos usando la key run es shell, donde elegimos el shell que se usará
       # para ejecutar el step
       shell: bash
