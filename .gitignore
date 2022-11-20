@@ -8,7 +8,9 @@ pnpm-debug.log*
 lerna-debug.log*
 
 /node_modules
-dist
+# Si no se indica /dist coge todos los dist, incluso el que está en mi node_modules del custom action
+# y ese si que tengo que pasarlo a GitHub
+/dist
 dist-ssr
 *.local
 
