@@ -11,6 +11,8 @@ jobs:
         uses: actions/checkout@v3
       # Usando un custom composite action en el workflow
       - name: Load & cache dependencies
+        # Ponemos este id para poder hacer referencia luego a el al recuperar el valor devuelto por el custom action.
+        id: cache-deps
         # Si se creó el action como un repositorio aislado en GitHub, se indica el identificador del repositorio
         # Por ejemplo:
         # uses: JoseManuelMunozManzano/udemy-gh-06-controlling-workflow-and-job-execution
@@ -22,6 +24,10 @@ jobs:
         # Como el input que espera el custom action se llama caching, aquí también lo indicamos, junto a su valor.
         with:
           caching: 'false'
+        # Nuevo step para obtener el valor devuelto por el custom action justo después de usarlo.
+        # El outputs.used-cache es lo que aparece en el custom action (action.yml)
+      - name: Output
+        run: echo "Cache used? ${{ steps.cache-deps.outputs.used-cache }}"
       - name: Lint code
         run: npm run lint
   test:
