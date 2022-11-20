@@ -7,11 +7,24 @@
 # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions
 name: 'Get & Cache Dependencies'
 description: 'Get the dependencies (via npm) and cache them.'
+# Podemos aceptar y usar inputs en nuestro custom action, independientemente del tipo de custom action creado.
+# Se usa le key inputs.
+# En este ejemplo se va a añadir un input que permite al usuario controlar si las dependencias deberían instalarse
+# siempre, independientemente de que hayan sido cacheadas.
+inputs:
+  caching:
+    description: 'Wheter to cache dependencies or not.'
+    required: false
+    default: 'true'
+  # Aquí puede haber más inputs
 runs:
   # Para composite actions la key using debe informarse con el valor 'composite'
   using: 'composite'
   steps:
     - name: Cache dependencies
+      # Usando el input gracias al object context input proporcionado por GitHub Actions.
+      # El value caching viene del nombre del input que hemos dado arriba en inputs.
+      if: inputs.caching == 'true'
       id: cache
       # Se pueden usar otros actions en nuestros actions
       uses: actions/cache@v3
@@ -19,7 +32,7 @@ runs:
         path: node_modules
         key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
     - name: Install dependencies
-      if: steps.cache.outputs.cache-hit != 'true'
+      if: steps.cache.outputs.cache-hit != 'true' || inputs.caching != 'true'
       run: npm ci
       # Una key especial que debe añadirse si estamos usando la key run es shell, donde elegimos el shell que se usará
       # para ejecutar el step

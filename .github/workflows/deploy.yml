@@ -18,6 +18,10 @@ jobs:
         # al root del proyecto. GitHub Actions busca automáticamente el fichero action.yml, por lo que no hay que
         # indicarlo.
         uses: ./.github/actions/cached-deps
+        # Pasando un valor al input del custom action.
+        # Como el input que espera el custom action se llama caching, aquí también lo indicamos, junto a su valor.
+        with:
+          caching: 'false'
       - name: Lint code
         run: npm run lint
   test:
