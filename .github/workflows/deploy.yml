@@ -9,15 +9,15 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
-      - name: Cache dependencies
-        id: cache
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
+      # Usando un custom composite action en el workflow
+      - name: Load & cache dependencies
+        # Si se creó el action como un repositorio aislado en GitHub, se indica el identificador del repositorio
+        # Por ejemplo:
+        # uses: JoseManuelMunozManzano/udemy-gh-06-controlling-workflow-and-job-execution
+        # Para un action almacenado localmente en este proyecto, se pasa el path a la carpeta del action, relativo
+        # al root del proyecto. GitHub Actions busca automáticamente el fichero action.yml, por lo que no hay que
+        # indicarlo.
+        uses: ./github/actions/cached-deps
       - name: Lint code
         run: npm run lint
   test:

@@ -1,0 +1,26 @@
+# Los custom composite actions son muy útiles cuando se repiten steps en distintos jobs.
+# Se pueden crear en su propio proyecto público, su propio repositorio, y ser accesibles por otros workflows, o,
+# como en ete caso, crearse en una carpeta (generalmente denominada actions) y ser accesibles sólo para workflows
+# de este proyecto.
+# En este ejemplo se va recoger la parte que cachea dependencias e instala dependencias.
+# Para configurar un composite action solo necesitaremos este script.
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions
+name: 'Get & Cache Dependencies'
+description: 'Get the dependencies (via npm) and cache them.'
+runs:
+  # Para composite actions la key using debe informarse con el valor 'composite'
+  using: 'composite'
+  steps:
+    - name: Cache dependencies
+      id: cache
+      # Se pueden usar otros actions en nuestros actions
+      uses: actions/cache@v3
+      with:
+        path: node_modules
+        key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+    - name: Install dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: npm ci
+      # Una key especial que debe añadirse si estamos usando la key run es shell, donde elegimos el shell que se usará
+      # para ejecutar el step
+      shell: bash
