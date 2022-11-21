@@ -77,6 +77,7 @@ jobs:
       - name: Output contents
         run: ls
       - name: Deploy site
+        id: deploy
         # Usando el custom JavaScript action
         # No va a funcionar porque no tengo cuenta AWS S3 ni los access keys para mandar hacer el deploy
         uses: ./.github/actions/deploy-s3-javascript
@@ -86,6 +87,10 @@ jobs:
         with:
           bucket: gha-custom-action-hosting
           dist-folder: ./dist
+      # El output del custom JavaScript action
+      - name: Output information
+        run: |
+          echo "Live URL: ${{ steps.deploy.outputs.website-url }}"
   # Nuevo job en el que se usa el custom JavaScript action
   # information:
   #   runs-on: ubuntu-latest

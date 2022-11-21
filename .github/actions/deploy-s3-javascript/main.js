@@ -28,7 +28,12 @@ function run() {
   exec.exec(`aws s3 sync ${distFolder} ${s3Uri} --region ${bucketRegion}`);
 
   // log en GitHub Actions workflow
-  core.notice('Hello from my custom JavaScript Action!');
+  //core.notice('Hello from my custom JavaScript Action!');
+
+  // 3) Output
+  const websiteUrl = `http://${bucket}.s3-website-${bucketRegion}.amazonaws.com`;
+  // El valor indicado en setOutput, website-url, es el que aparece en action.yml en outputs
+  core.setOutput('website-url', websiteUrl);
 }
 
 run();

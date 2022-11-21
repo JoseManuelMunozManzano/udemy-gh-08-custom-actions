@@ -16,6 +16,10 @@ inputs:
   dist-folder:
     description: 'The folder containing the deployable files'
     required: true
+# Solo tenemos que registrar el output, pero lo configuramos en el código JavaScript
+outputs:
+  website-url:
+    description: 'The URL of the deployed website'
 runs:
   using: 'node16'
   # Se indica el nombre del fichero que se ejecutará para este custom action. El fichero está en el mismo directorio
