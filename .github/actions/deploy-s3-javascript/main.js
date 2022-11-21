@@ -12,6 +12,21 @@ const github = require('@actions/github');
 const exec = require('@actions/exec');
 
 function run() {
+  // 1) Obtener los valores del input del custom JavaScript action
+  const bucket = core.getInput('bucket', { required: true });
+  const bucketRegion = core.getInput('bucket-region', { required: true });
+  const distFolder = core.getInput('dist-folder', { required: true });
+
+  // No se usa en el ejemplo, pero se indica para que se sepa que github.getOctokit()
+  // permite enviar muy fácilmente requests al REST API de GitHub y también obtenemos acceso al context object
+  // que ofrece algunos valores del context object de GitHub.
+  // github.getOctokit();
+  // github.context.
+
+  // 2) Subir archivos
+  const s3Uri = `s3://${bucket}`;
+  exec.exec(`aws s3 sync ${distFolder} ${s3Uri} --region ${bucketRegion}`);
+
   // log en GitHub Actions workflow
   core.notice('Hello from my custom JavaScript Action!');
 }
