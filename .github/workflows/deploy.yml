@@ -80,7 +80,9 @@ jobs:
         id: deploy
         # Usando el custom JavaScript action
         # No va a funcionar porque no tengo cuenta AWS S3 ni los access keys para mandar hacer el deploy
-        uses: ./.github/actions/deploy-s3-javascript
+        # uses: ./.github/actions/deploy-s3-javascript
+        # Usando el custom Docker action. Es igual que usar el custom JavaScript action.
+        uses: ./.github/actions/deploy-s3-docker
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
