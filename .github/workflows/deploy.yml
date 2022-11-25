@@ -64,6 +64,16 @@ jobs:
           name: dist-files
           path: dist
   deploy:
+    # Esto forma parte de la configuración de permisos una vez eliminados los secrets de AWS especificado abajo.
+    # Hay que indicar permisos al id-token porque como pone en la documentación, por defecto no tiene
+    # https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services
+    # Aquí se indica write porque el token de permiso temporal que se usará en el job debe crearse como parte
+    # del job.
+    # Para content se indica read, y es necesario indicarlo, porque una vez se configura un permiso hay que
+    # configurar todos los demás, ya que por defecto el resto de permisos se desabilitan.
+    permissions:
+      id-token: write
+      contents: read
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -76,6 +86,13 @@ jobs:
           path: ./dist
       - name: Output contents
         run: ls
+      # Obtiene los permisos (ya no va por secrets) de AWS para la ejecución de este job
+      - name: Get AWS permissions
+        uses: aws-actions/configure-aws-credentials
+        with:
+          # Este valor viene de la configuración hecha en AWS
+          role-to-assume: arn:aws:iam::450226343468:role/GitHubDemo
+          aws-region: us-east-1
       - name: Deploy site
         id: deploy
         # Usando el custom JavaScript action
@@ -83,11 +100,18 @@ jobs:
         # uses: ./.github/actions/deploy-s3-javascript
         # Usando el custom Docker action. Es igual que usar el custom JavaScript action.
         uses: ./.github/actions/deploy-s3-docker
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        # Sobre estas keys de AWS que guardamos como secrets en GitHub indicar que no es lo mejor
+        # Esto es porque pueden haber problemas de script injection, pero además porque lo normal es
+        # que los de Sistemas no te den estas claves, que dan permiso a todo.
+        # La mejor alternativa es usar OpenID Connect
+        # https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect
+        # https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services
+        # Esto se quita y se crea un nuevo step (Get AWS permissions)
+        #env:
+        #  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        #  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         with:
-          bucket: gha-custom-action-hosting
+          bucket: gha-security-hosting-demo
           dist-folder: ./dist
       # El output del custom JavaScript action
       - name: Output information
