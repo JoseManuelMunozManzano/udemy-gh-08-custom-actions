@@ -88,7 +88,7 @@ jobs:
         run: ls
       # Obtiene los permisos (ya no va por secrets) de AWS para la ejecución de este job
       - name: Get AWS permissions
-        uses: aws-actions/configure-aws-credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           # Este valor viene de la configuración hecha en AWS
           role-to-assume: arn:aws:iam::450226343468:role/GitHubDemo
@@ -100,7 +100,7 @@ jobs:
         # uses: ./.github/actions/deploy-s3-javascript
         # Usando el custom Docker action. Es igual que usar el custom JavaScript action.
         uses: ./.github/actions/deploy-s3-docker
-        # Sobre estas keys de AWS que guardamos como secrets en GitHub indicar que no es lo mejor
+        # Sobre estas keys de AWS que guardamos como secrets en GitHub indicar que no es lo mejor.
         # Esto es porque pueden haber problemas de script injection, pero además porque lo normal es
         # que los de Sistemas no te den estas claves, que dan permiso a todo.
         # La mejor alternativa es usar OpenID Connect
